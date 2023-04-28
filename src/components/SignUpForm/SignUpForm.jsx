@@ -1,24 +1,43 @@
-import { useState } from "react";
+import { useFormik } from "formik";
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 const SignUpForm = () => {
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    password: "",
+  const formik = useFormik({
+    initialValues,
+    onSubmit: (values) => {},
+    validate: (values) => {
+      let errors = {};
+
+      if (!values.name) {
+        errors.name = "Name is required";
+      }
+      if (!values.email) {
+        errors.email = "Email is required";
+      }
+      if (!values.password) {
+        errors.password = "Password is required";
+      }
+
+      return errors;
+    },
   });
-  const changeHandler = ({ target }) => {
-    setUserData({ ...userData, [target.name]: target.value });
-  };
+  console.log(formik.errors);
+
   return (
     <div>
-      <form>
+      <form onSubmit={formik.handleSubmit}>
         <div>
           <label>Name</label>
           <input
             type="text"
             name="name"
-            value={userData.name}
-            onChange={changeHandler}
+            value={formik.values.name}
+            onChange={formik.handleChange}
           />
         </div>
         <div>
@@ -26,8 +45,8 @@ const SignUpForm = () => {
           <input
             type="email"
             name="email"
-            value={userData.email}
-            onChange={changeHandler}
+            value={formik.values.email}
+            onChange={formik.handleChange}
           />
         </div>
         <div>
@@ -35,8 +54,8 @@ const SignUpForm = () => {
           <input
             name="password"
             type="password"
-            value={userData.password}
-            onChange={changeHandler}
+            value={formik.values.password}
+            onChange={formik.handleChange}
           />
         </div>
         <div>
