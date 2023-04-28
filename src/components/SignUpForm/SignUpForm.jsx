@@ -7,26 +7,28 @@ const initialValues = {
 };
 
 const SignUpForm = () => {
+  const validate = (values) => {
+    let errors = {};
+
+    if (!values.name) {
+      errors.name = "Name is required";
+    }
+    if (!values.email) {
+      errors.email = "Email is required";
+    }
+    if (!values.password) {
+      errors.password = "Password is required";
+    }
+
+    return errors;
+  };
+
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {},
-    validate: (values) => {
-      let errors = {};
-
-      if (!values.name) {
-        errors.name = "Name is required";
-      }
-      if (!values.email) {
-        errors.email = "Email is required";
-      }
-      if (!values.password) {
-        errors.password = "Password is required";
-      }
-
-      return errors;
-    },
+    validate,
   });
-  console.log(formik.errors);
+  console.log(formik.touched);
 
   return (
     <div>
@@ -38,7 +40,11 @@ const SignUpForm = () => {
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
+          {formik.errors.name && formik.touched.name && (
+            <p>{formik.errors.name}</p>
+          )}
         </div>
         <div>
           <label>Email</label>
@@ -47,7 +53,11 @@ const SignUpForm = () => {
             name="email"
             value={formik.values.email}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
+          {formik.errors.email && formik.touched.email && (
+            <p>{formik.errors.email}</p>
+          )}
         </div>
         <div>
           <label>password</label>
@@ -56,7 +66,11 @@ const SignUpForm = () => {
             type="password"
             value={formik.values.password}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
+          {formik.errors.password && formik.touched.password && (
+            <p>{formik.errors.password}</p>
+          )}
         </div>
         <div>
           <button type="submit">Submit</button>
