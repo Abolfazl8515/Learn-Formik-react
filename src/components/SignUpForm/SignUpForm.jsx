@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const initialValues = {
   name: "",
@@ -6,55 +7,36 @@ const initialValues = {
   password: "",
 };
 
+let validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be 8 character or bigger"),
+});
+
 const SignUpForm = () => {
-  const validate = (values) => {
-    let errors = {};
-
-    if (!values.name) {
-      errors.name = "Name is required";
-    }
-    if (!values.email) {
-      errors.email = "Email is required";
-    }
-    if (!values.password) {
-      errors.password = "Password is required";
-    }
-
-    return errors;
-  };
-
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {},
-    validate,
+    validationSchema,
   });
-  console.log(formik.touched);
 
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
         <div>
           <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <input type="text" name="name" {...formik.getFieldProps("name")} />
           {formik.errors.name && formik.touched.name && (
             <p>{formik.errors.name}</p>
           )}
         </div>
         <div>
           <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <input type="email" name="email" {...formik.getFieldProps("email")} />
           {formik.errors.email && formik.touched.email && (
             <p>{formik.errors.email}</p>
           )}
@@ -64,9 +46,7 @@ const SignUpForm = () => {
           <input
             name="password"
             type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            {...formik.getFieldProps("password")}
           />
           {formik.errors.password && formik.touched.password && (
             <p>{formik.errors.password}</p>
