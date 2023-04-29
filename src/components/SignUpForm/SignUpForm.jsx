@@ -1,5 +1,14 @@
 import { useFormik } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
+
+const savedData = {
+  name: "Abolfazl",
+  email: "abolfazl@ex.com",
+  password: "123456",
+  passwordConfirm: "123456",
+  gender: "0",
+};
 
 const initialValues = {
   name: "",
@@ -24,11 +33,13 @@ let validationSchema = Yup.object({
 });
 
 const SignUpForm = () => {
+  const [formValues, setFormValues] = useState(null);
   const formik = useFormik({
-    initialValues,
+    initialValues: formValues || initialValues,
     onSubmit: (values) => {},
     validationSchema,
     validateOnMount: true,
+    enableReinitialize: true,
   });
 
   console.log(formik.values);
@@ -94,6 +105,9 @@ const SignUpForm = () => {
           )}
         </div>
         <div>
+          <button type="button" onClick={() => setFormValues(savedData)}>
+            Load your data
+          </button>
           <button type="submit" disabled={!formik.isValid}>
             Submit
           </button>
