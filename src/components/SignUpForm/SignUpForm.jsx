@@ -6,6 +6,7 @@ const initialValues = {
   email: "",
   password: "",
   passwordConfirm: "",
+  gender: "",
 };
 
 let validationSchema = Yup.object({
@@ -19,6 +20,7 @@ let validationSchema = Yup.object({
   passwordConfirm: Yup.string()
     .required("password confirm is required")
     .oneOf([Yup.ref("password"), null], "password does not match"),
+  gender: Yup.string().required("Gender is required"),
 });
 
 const SignUpForm = () => {
@@ -28,6 +30,8 @@ const SignUpForm = () => {
     validationSchema,
     validateOnMount: true,
   });
+
+  console.log(formik.values);
 
   return (
     <div>
@@ -66,6 +70,27 @@ const SignUpForm = () => {
           />
           {formik.errors.passwordConfirm && formik.touched.passwordConfirm && (
             <p>{formik.errors.passwordConfirm}</p>
+          )}
+        </div>
+        <div>
+          <label>Male</label>
+          <input
+            value="0"
+            name="gender"
+            type="radio"
+            checked={formik.values.gender === "0"}
+            onChange={formik.handleChange}
+          />
+          <label>Female</label>
+          <input
+            value="1"
+            name="gender"
+            type="radio"
+            checked={formik.values.gender === "1"}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.gender && formik.touched.gender && (
+            <p>{formik.errors.gender}</p>
           )}
         </div>
         <div>
