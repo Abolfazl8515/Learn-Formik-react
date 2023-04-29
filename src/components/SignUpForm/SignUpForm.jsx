@@ -5,6 +5,7 @@ const initialValues = {
   name: "",
   email: "",
   password: "",
+  passwordConfirm: "",
 };
 
 let validationSchema = Yup.object({
@@ -15,6 +16,9 @@ let validationSchema = Yup.object({
   password: Yup.string()
     .required("Password is required")
     .min(8, "Password must be 8 character or bigger"),
+  passwordConfirm: Yup.string()
+    .required("password confirm is required")
+    .oneOf([Yup.ref("password"), null], "password does not match"),
 });
 
 const SignUpForm = () => {
@@ -22,6 +26,7 @@ const SignUpForm = () => {
     initialValues,
     onSubmit: (values) => {},
     validationSchema,
+    validateOnMount: true,
   });
 
   return (
@@ -53,7 +58,20 @@ const SignUpForm = () => {
           )}
         </div>
         <div>
-          <button type="submit">Submit</button>
+          <label>password confirmation</label>
+          <input
+            name="passwordConfirm"
+            type="password"
+            {...formik.getFieldProps("passwordConfirm")}
+          />
+          {formik.errors.passwordConfirm && formik.touched.passwordConfirm && (
+            <p>{formik.errors.passwordConfirm}</p>
+          )}
+        </div>
+        <div>
+          <button type="submit" disabled={!formik.isValid}>
+            Submit
+          </button>
         </div>
       </form>
     </div>
