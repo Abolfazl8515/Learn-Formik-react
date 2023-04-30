@@ -1,14 +1,7 @@
+import axios from "axios";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
-
-const savedData = {
-  name: "Abolfazl",
-  email: "abolfazl@ex.com",
-  password: "123456",
-  passwordConfirm: "123456",
-  gender: "0",
-};
 
 const initialValues = {
   name: "",
@@ -43,6 +36,12 @@ const SignUpForm = () => {
   });
 
   console.log(formik.values);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/users/1")
+      .then((res) => setFormValues(res.data));
+  }, []);
 
   return (
     <div>
