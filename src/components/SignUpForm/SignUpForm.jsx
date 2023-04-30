@@ -2,6 +2,8 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import Input from "../common/Input";
+import RadioBtn from "../common/radioBtn";
 
 const initialValues = {
   name: "",
@@ -10,6 +12,11 @@ const initialValues = {
   passwordConfirm: "",
   gender: "",
 };
+
+const radioOptions = [
+  { label: "Male", value: "0" },
+  { label: "Female", value: "1" },
+];
 
 let validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -46,67 +53,23 @@ const SignUpForm = () => {
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input type="text" name="name" {...formik.getFieldProps("name")} />
-          {formik.errors.name && formik.touched.name && (
-            <p>{formik.errors.name}</p>
-          )}
-        </div>
-        <div>
-          <label>Email</label>
-          <input type="email" name="email" {...formik.getFieldProps("email")} />
-          {formik.errors.email && formik.touched.email && (
-            <p>{formik.errors.email}</p>
-          )}
-        </div>
-        <div>
-          <label>password</label>
-          <input
-            name="password"
-            type="password"
-            {...formik.getFieldProps("password")}
+        <Input label="Name" name="name" formik={formik} />
+        <Input label="Email" name="email" formik={formik} />
+        <Input label="Password" name="password" formik={formik} />
+        <Input
+          label="Password confirmation"
+          name="passwordConfirm"
+          formik={formik}
+        />
+        {radioOptions.map((r) => (
+          <RadioBtn
+            label={r.label}
+            value={r.value}
+            formik={formik}
+            key={r.value}
           />
-          {formik.errors.password && formik.touched.password && (
-            <p>{formik.errors.password}</p>
-          )}
-        </div>
+        ))}
         <div>
-          <label>password confirmation</label>
-          <input
-            name="passwordConfirm"
-            type="password"
-            {...formik.getFieldProps("passwordConfirm")}
-          />
-          {formik.errors.passwordConfirm && formik.touched.passwordConfirm && (
-            <p>{formik.errors.passwordConfirm}</p>
-          )}
-        </div>
-        <div>
-          <label>Male</label>
-          <input
-            value="0"
-            name="gender"
-            type="radio"
-            checked={formik.values.gender === "0"}
-            onChange={formik.handleChange}
-          />
-          <label>Female</label>
-          <input
-            value="1"
-            name="gender"
-            type="radio"
-            checked={formik.values.gender === "1"}
-            onChange={formik.handleChange}
-          />
-          {formik.errors.gender && formik.touched.gender && (
-            <p>{formik.errors.gender}</p>
-          )}
-        </div>
-        <div>
-          <button type="button" onClick={() => setFormValues(savedData)}>
-            Load your data
-          </button>
           <button type="submit" disabled={!formik.isValid}>
             Submit
           </button>
